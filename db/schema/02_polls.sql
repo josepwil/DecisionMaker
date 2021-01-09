@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS polls CASCADE;
+CREATE TABLE polls (
+  id SERIAL PRIMARY KEY NOT NULL,
+  creator_id INTEGER REFERENCES creators(id),
+  title VARCHAR(255) NOT NULL,
+  name_required BOOLEAN NOT NULL,
+  render_graph VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
