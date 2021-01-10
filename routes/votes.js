@@ -4,20 +4,20 @@ const router  = express.Router();
 
 // access form to vote on a particular poll
 module.exports = (db) => {
-  router.get("/:pollId", (req, res) => {
-    res.send('being hit');
-    console.log('req param is: ', req.params.pollId);
+  router.get("/:poll_id", (req, res) => {
     let query = `
     SELECT title, option_name, description
     FROM polls
-    JOIN options ON poll_id = polls.d
+    JOIN options ON poll_id = polls.id
     WHERE polls.id = ${req.params.poll_id};
     `;
     db.query(query)
       .then(data => {
-        const users = data.rows;
-        console.log(data.rows)
-        res.json({ users });
+        const pollData = data.rows;
+        const templateVars = { pollData };
+        console.log(pollData);
+
+        res.render("poll_vote", templateVars);
       })
       .catch(err => {
         res
