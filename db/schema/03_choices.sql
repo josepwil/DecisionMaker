@@ -3,5 +3,7 @@ CREATE TABLE choices (
   id SERIAL PRIMARY KEY NOT NULL,
   poll_id INTEGER REFERENCES polls(id),
   label VARCHAR(255) NOT NULL,
-  description VARCHAR(255) NOT NULL
+  description VARCHAR(255) NOT NULL,
+  rank SMALLINT,
+  submission_id INTEGER REFERENCES submissions(id)
 );
