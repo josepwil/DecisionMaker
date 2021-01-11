@@ -8,4 +8,18 @@ $(() => {
     }
   });
 
+
+  // const createNewPollForm = function() {
+  //   const markup = $(`
+  //     <form>
+
+
+
+
+
+  //     </form>
+  //   `)
+  // }
+
+
 });
