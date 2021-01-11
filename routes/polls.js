@@ -18,7 +18,7 @@ module.exports = (db) => {
         let rows = data.rows;
         console.log(rows.length);
         let dataArray = bordaCount(rows);
-        console.log(dataArray);
+        console.log(dataArray);s
         res.json(dataArray);
       })
 
