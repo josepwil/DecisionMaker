@@ -17,15 +17,10 @@ $(document).ready(() => {
         <label for="title">Poll Title:</label>
         <input type="text" id="title" name="title">
         <div class="options">
-<<<<<<< HEAD
           <label for="choice">Option:</label>
           <input type="text" id="option" name="option">
           <label for="description">Description</label>
           <textarea id="description" name="description"></textarea>
-=======
-          <label for="choice">Options:</label>
-          <input type="text" id="option" name="option">
->>>>>>> master
           <p class="addNewOption">Add</p>
         </div>
         <label for="name_required">Voter Must Enter Name?</label>
@@ -59,14 +54,10 @@ $(document).ready(() => {
 
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
-<<<<<<< HEAD
     <label for="choice">Option:</label>
     <input type="text" id="option" name="option">
     <label for="description">Description:</label>
     <textarea id="description" name="description"></textarea>
-=======
-    <input type="text" id="options" name="option">
->>>>>>> master
     `;
     $(".options").append($newInput);
   });
