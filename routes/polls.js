@@ -18,7 +18,7 @@ module.exports = (db) => {
         let rows = data.rows;
         console.log(rows.length);
         let dataArray = bordaCount(rows);
-        console.log(dataArray);s
+        console.log(dataArray);
         res.json(dataArray);
       })
 
@@ -26,7 +26,12 @@ module.exports = (db) => {
         res.status(500).json({ error: err.message });
       });
   });
+
+  router.post("/", (req, res) => {
+    console.log(req.body);
+  })
   return router;
+
 };
 
 // {"command":"SELECT",
@@ -37,3 +42,4 @@ module.exports = (db) => {
 // "tableID":0,"columnID":0,"dataTypeID":20,"dataTypeSize":8,"dataTypeModifier":-1,"format":"text"}],
 // "_parsers":[null],
 // "rowAsArray":false}test,test tests
+© 2021 GitHu
