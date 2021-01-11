@@ -43,7 +43,8 @@ app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
 app.use("/polls/vote", voteRoutes(db));
 // Note: mount other resources here, using the same pattern above
-
+const polls = require("./routes/polls");
+app.use("/polls",polls(db))
 
 // Home page
 // Warning: avoid creating more routes in this file!
