@@ -37,20 +37,25 @@ $(document).ready(() => {
     return $markup;
   }
 
+  // poll created (with links)
+  const pollCreated = function(resultLink, SubmissionLink) {
+    const $markup = `
+    <h3>Poll Created</h3>
+    <div>
+      <p>You will be notified via email whenever someone votes on your poll</p>
+      <p>Results Link ${resultLink}</p>
+      <p>Voter Link ${SubmissionLink}</p>
+    </div>
+    `
+    return $markup;
+  }
 
+  // open new poll form
   $(".createPoll").on("click", function() {
-    $.ajax({
-      method: "GET",
-      url: "/",
-      dataType: "html"
-    }).done((submissions) => {
+      $(".content-container").empty();
       const $pollForm = createNewPollForm();
-      $("body").append($pollForm);
-    });
-  })
-
-
-
+      $(".content-container").append($pollForm);
+  });
 
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
@@ -62,6 +67,7 @@ $(document).ready(() => {
     $(".options").append($newInput);
   });
 
+  // post the submitted form
   $(document).on('submit', 'form', function(event) {
     event.preventDefault();
     console.log($(this).serialize());
@@ -72,7 +78,10 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
       .done(function() {
-        console.log(data);
+        console.log('form posted');
+        const $pollConfirmation = pollCreated('result link here', 'voter link here')
+        $(".content-container").empty();
+        $(".content-container").append($pollConfirmation);
       })
   })
 
