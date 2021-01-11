@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vote on a Poll</title>
+
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.13.0/Sortable.min.js" integrity="sha512-5x7t0fTAVo9dpfbp3WtE2N6bfipUwk7siViWncdDoSz2KwOqVC1N9fDxEOzk0vTThOua/mglfF8NO7uVDLRC8Q==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+  </head>
+
+  <body>
+    <h1><%= pollData[0].title %></h1>
+    <form action="/polls/vote/<%= pollData[0].poll_id %>" method="POST">
+      <% if(pollData[0].name_required) { %>
+      <input type="text" placeholder="name" name="submitter_name">
+      <% } %>
+      <div id="items">
+        <% for (let option of pollData) { %>
+          <div data-id="<%= option.option_id %>">
+            <h3><%= option.option_name %></h3>
+            <p><%= option.description %></p>
+          </div>
+        <% } %>
+        </div>
+      <input type="hidden" id="options_rank" value="" name="options_rank">
+      <button id="click-me">Vote!</button>
+    </form>
+
+    <script>
+      const el = document.getElementById('items');
+      const rank = document.getElementById('options_rank');
+
+      const sortable = Sortable.create(el, {
+        sort: true,
+        onUpdate: function() {
+          rank.value = sortable.toArray().join(',');
+        }
+      });
+      rank.value = sortable.toArray().join(',');
+    </script>
+  </body>
+</html>
