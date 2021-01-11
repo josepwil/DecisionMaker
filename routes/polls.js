@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { bordaCount } = require("../helper/helper")
+
 const query = `SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name
 FROM polls
 JOIN submissions ON polls.id = submissions.poll_id
@@ -16,20 +17,22 @@ module.exports = (db) => {
     db.query(query)
       .then((data) => {
         let rows = data.rows;
-        console.log(rows.length);
         let dataArray = bordaCount(rows);
         console.log(dataArray);
         res.json(dataArray);
       })
-
       .catch((err) => {
         res.status(500).json({ error: err.message });
       });
   });
 
-  router.post("/", (req, res) => {
-    console.log(req.body);
-  })
+  // router.post("/", (req, res) => {
+  //   let data = req.body
+  //   let nameRequired;
+  //   data.name_required? nameRequired = TRUE : nameRequired = false
+  //   let param = [data.title, data.render_as, nameRequired]
+  //   console.log(nameRequired, data.title,data.render_as);
+  // })
   return router;
 
 };
