@@ -14,7 +14,9 @@
   <body>
     <h1><%= pollData[0].title %></h1>
     <form action="/polls/vote/<%= pollData[0].poll_id %>" method="POST">
+      <% if(pollData[0].name_required) { %>
       <input type="text" placeholder="name" name="submitter_name">
+      <% } %>
       <div id="items">
         <% for (let option of pollData) { %>
           <div data-id="<%= option.option_id %>">
