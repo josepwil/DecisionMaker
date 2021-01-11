@@ -13,30 +13,34 @@
 
   <body>
     <h1><%= pollData[0].title %></h1>
-    <form>
-
+    <form action="/polls/vote/<%= pollData[0].poll_id %>" method="POST">
+      <input type="text" placeholder="name" name="submitter_name">
       <div id="items">
         <% for (let option of pollData) { %>
-          <div>
-            <li><%= option.option_name %></li>
-            <li><%= option.description %></li>
-
+          <div data-id="<%= option.option_id %>">
+            <h3><%= option.option_name %></h3>
+            <p><%= option.description %></p>
           </div>
-
         <% } %>
-
-
         </div>
-
-
-      <button>Vote!</button>
+      <input type="hidden" id="options_rank" value="" name="options_rank">
+      <button id="click-me">Vote!</button>
     </form>
-
-
 
     <script>
       const el = document.getElementById('items');
-      const sortable = Sortable.create(el);
+      const rank = document.getElementById('options_rank');
+
+      const sortable = Sortable.create(el, {
+        sort: true,
+        onUpdate: function() {
+          rank.value = sortable.toArray().join(',');
+        }
+      });
+
+      rank.value = sortable.toArray().join(',');
+
+
     </script>
 
   </body>
