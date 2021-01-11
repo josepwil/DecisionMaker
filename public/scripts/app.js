@@ -18,7 +18,7 @@ $(document).ready(() => {
         <input type="text" id="title" name="title">
         <div class="options">
           <label for="choice">Options:</label>
-          <input type="text" id="choice" name="choice">
+          <input type="text" id="option" name="option">
           <p class="addNewOption">Add</p>
         </div>
         <label for="name_required">Voter Must Enter Name?</label>
@@ -52,9 +52,23 @@ $(document).ready(() => {
 
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
-    <input type="text" id="choice" name="choice">
+    <input type="text" id="options" name="option">
     `;
     $(".options").append($newInput);
   });
+
+  $(document).on('submit', 'form', function(event) {
+    event.preventDefault();
+    console.log($(this).serialize());
+
+    $.ajax({
+      method: "POST",
+      url: "/polls",
+      data: $(this).serialize()
+    })
+      .done(function() {
+        console.log(data);
+      })
+  })
 
 });

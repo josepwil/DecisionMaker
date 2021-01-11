@@ -93,7 +93,12 @@ module.exports = (db) => {
           .json({ error: err.message });
       });
   });
+
+  router.post("/", (req, res) => {
+    console.log(req.body);
+  })
   return router;
+
 };
 
 // {"command":"SELECT",
