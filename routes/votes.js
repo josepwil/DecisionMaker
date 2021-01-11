@@ -14,7 +14,6 @@ module.exports = (db) => {
     db.query(query, [req.params.poll_id])
       .then(data => {
         const pollData = data.rows;
-        console.log(pollData);
         const templateVars = { pollData };
         res.render("poll_vote", templateVars);
       })
@@ -48,6 +47,11 @@ module.exports = (db) => {
           db.query(votesQuery, [submissionId, rankArray[i], i+1]);
         }
         res.render('vote_cast');
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .json({ error: err.message });
       });
     })
     return router;
