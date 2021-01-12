@@ -13,7 +13,7 @@ $(document).ready(() => {
   const createNewPollForm = function() {
     const $markup = $(`
       <h3>Add A New Poll</h3>
-      <form>
+      <form class="newPollForm">
         <label for="title">Poll Title:</label>
         <input type="text" id="title" name="title">
         <div class="options">
@@ -43,8 +43,8 @@ $(document).ready(() => {
     <h3>Poll Created</h3>
     <div>
       <p>You will be notified via email whenever someone votes on your poll</p>
-      <p>Results Link ${resultLink}</p>
-      <p>Voter Link ${SubmissionLink}</p>
+      <p>Results Link: <a href=${resultLink}>${resultLink}</a></p>
+      <p>Voter Link:  <a href=${SubmissionLink}>${SubmissionLink}</a></p>
     </div>
     `
     return $markup;
@@ -68,20 +68,22 @@ $(document).ready(() => {
   });
 
   // post the submitted form
-  $(document).on('submit', 'form', function(event) {
+  $(document).on('submit', '.newPollForm', function(event) {
     event.preventDefault();
-    console.log($(this).serialize());
+
 
     $.ajax({
       method: "POST",
       url: "/polls",
       data: $(this).serialize()
     })
-      .done(function() {
-        console.log('form posted');
-        const $pollConfirmation = pollCreated('result link here', 'voter link here')
-        $(".content-container").empty();
-        $(".content-container").append($pollConfirmation);
+    .done(function(data) {
+      console.log('the data before json', data);
+      const resultsLink = `http://localhost:8080/polls/${data}`
+      const voteLink = `http://localhost:8080/polls/vote/${data}`
+      const $pollConfirmation = pollCreated(resultsLink, voteLink);
+      $(".content-container").empty();
+      $(".content-container").append($pollConfirmation);
       })
   })
 

@@ -46,16 +46,16 @@ module.exports = (db) => {
         let poll = newPoll.rows;
         for(let i = 0; i < data.option.length; i++){
           let paramOption = [poll[0].id, data.option[i], data.description[i]]
-          console.log(paramOption)
-          db.query(queryOption,paramOption)
+          return db.query(queryOption,paramOption)
           .then(option => {
-            console.log (option.rows)
+            const pollId = option.rows[0].poll_id;
+            res.json(pollId);
           })
-          .catch((err) => {
-            res.status(500).json({ error: err.message });
-          });
         }
       })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
 
   })
   return router;
