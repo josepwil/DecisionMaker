@@ -13,7 +13,7 @@ $(document).ready(() => {
   const createNewPollForm = function() {
     const $markup = $(`
       <h3>Add A New Poll</h3>
-      <form>
+      <form class="newPollForm">
         <label for="title">Poll Title:</label>
         <input type="text" id="title" name="title">
         <div class="options">
@@ -31,26 +31,34 @@ $(document).ready(() => {
           <option value="Pie">Pie Chart</option>
           <option value="Line">Line Chart</option>
         </select>
+        <label for="email">Email Address:</label>
+        <input type="text" id="email" name="email">
         <button>Create</button>
       </form>
+
     `)
     return $markup;
   }
 
+  // poll created (with links)
+  const pollCreated = function(resultLink, SubmissionLink) {
+    const $markup = `
+    <h3>Poll Created</h3>
+    <div>
+      <p>You will be notified via email whenever someone votes on your poll</p>
+      <p>Results Link: <a href=${resultLink}>${resultLink}</a></p>
+      <p>Voter Link:  <a href=${SubmissionLink}>${SubmissionLink}</a></p>
+    </div>
+    `
+    return $markup;
+  }
 
+  // open new poll form
   $(".createPoll").on("click", function() {
-    $.ajax({
-      method: "GET",
-      url: "/",
-      dataType: "html"
-    }).done((submissions) => {
+      $(".content-container").empty();
       const $pollForm = createNewPollForm();
-      $("body").append($pollForm);
-    });
-  })
-
-
-
+      $(".content-container").append($pollForm);
+  });
 
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
@@ -62,18 +70,24 @@ $(document).ready(() => {
     $(".options").append($newInput);
   });
 
-  $(document).on('submit', 'form', function(event) {
+  // post the submitted form
+  $(document).on('submit', '.newPollForm', function(event) {
     event.preventDefault();
-    console.log($(this).serialize());
+
+    const userEmail = $(this).find("#email").val();
 
     $.ajax({
       method: "POST",
       url: "/polls",
       data: $(this).serialize()
     })
-      .done(function() {
-        console.log(data);
+    .done(function(data) {
+      console.log('~~~~~~~~~~~~~~ USER EMAIL ~~~~~~~~~~', userEmail);
+      const resultsLink = `http://localhost:8080/polls/${data}`
+      const voteLink = `http://localhost:8080/polls/vote/${data}`
+      const $pollConfirmation = pollCreated(resultsLink, voteLink);
+      $(".content-container").empty();
+      $(".content-container").append($pollConfirmation);
       })
   })
-
 });
