@@ -19,6 +19,16 @@ $(document).ready(() => {
     $(".content-container").append($graph);
   };
 
+  const specificPoll = function(pollObjs){
+    let id = window.location.search.split('=');
+    if(id[0] === '?id'){
+      let pollID = id[id.length - 1]
+      const specificGraph = {[pollID]: pollObjs[pollID]}
+      console.log('specific graph ~~~~', specificGraph);
+      renderGraph(specificGraph);
+    }
+  }
+
 
   const allPolls = function(){
     $.ajax({
@@ -38,6 +48,8 @@ $(document).ready(() => {
       for(let key in pollObjs) {
         renderGraph(key);
       }
+
+      specificPoll(pollObjs);
     })
   };
   // call on page load
