@@ -13,6 +13,21 @@ const bordaCount = (rows) => {
   return result;
 };
 
+const createEmail = (userEmail, pollId) => {
+  return data = {
+    from: "Mailgun Sandbox <postmaster@sandboxbfeeb2c2d36e4f3c8fc8d3c598dce193.mailgun.org>",
+    to: userEmail,
+    subject: "Your new poll was created",
+    text: `
+    Congrats, your new poll was created!
 
+    Share this link with your friends so they can vote:
+    http://localhost:8080/polls/vote/${pollId}
 
-module.exports = { bordaCount };
+    Check out the results here:
+    http://localhost:8080/polls/${pollId}
+    `
+  }
+}
+
+module.exports = { bordaCount, createEmail };

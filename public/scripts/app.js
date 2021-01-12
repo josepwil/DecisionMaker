@@ -31,8 +31,11 @@ $(document).ready(() => {
           <option value="Pie">Pie Chart</option>
           <option value="Line">Line Chart</option>
         </select>
+        <label for="email">Email Address:</label>
+        <input type="text" id="email" name="email">
         <button>Create</button>
       </form>
+
     `)
     return $markup;
   }
@@ -71,6 +74,7 @@ $(document).ready(() => {
   $(document).on('submit', '.newPollForm', function(event) {
     event.preventDefault();
 
+    const userEmail = $(this).find("#email").val();
 
     $.ajax({
       method: "POST",
@@ -78,7 +82,7 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
     .done(function(data) {
-      console.log('the data before json', data);
+      console.log('~~~~~~~~~~~~~~ USER EMAIL ~~~~~~~~~~', userEmail);
       const resultsLink = `http://localhost:8080/polls/${data}`
       const voteLink = `http://localhost:8080/polls/vote/${data}`
       const $pollConfirmation = pollCreated(resultsLink, voteLink);
@@ -86,5 +90,4 @@ $(document).ready(() => {
       $(".content-container").append($pollConfirmation);
       })
   })
-
 });
