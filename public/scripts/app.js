@@ -8,6 +8,85 @@ $(document).ready(() => {
   //   }
   // });
 
+  const createModal = function(content) {
+    const $markup = `
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>${content}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+    return $markup;
+  }
+
+  const renderGraph = function(obj) {
+    console.log('~~~~ we make our graph here: ', obj)
+    const $graph = `
+    <div>
+      <p>I am a graph for:</p>
+      ${obj}
+    </div>
+    `
+    $(".content-container").append($graph);
+  };
+
+  const specificPoll = function(pollObjs){
+    let id = window.location.search.split('=');
+    if(id[0] === '?id'){
+      let pollID = id[id.length - 1]
+      const specificGraph = {[pollID]: pollObjs[pollID]}
+      console.log('specific graph ~~~~', specificGraph);
+      const newModal = createModal(specificGraph);
+      $(".content-container").append(newModal);
+      $("#exampleModalCenter").modal('show');
+    }
+  }
+
+
+  const allPolls = function(){
+    $.ajax({
+      method: "GET",
+      url: "/polls"
+    }).done(data => {
+      $(".content-container").empty();
+      const pollObjs = {}
+      for (let obj of data) {
+        const pollId = obj.poll_id;
+        if(pollObjs[pollId]) {
+          pollObjs[pollId].push(obj);
+        } else {
+          pollObjs[pollId] = [obj];
+        }
+      }
+      for(let key in pollObjs) {
+        renderGraph(key);
+      }
+
+      specificPoll(pollObjs);
+    })
+  };
+  // call on page load
+  allPolls();
+
+  $(".allPolls").on("click", allPolls);
+
+
+
+
 
 
   const createNewPollForm = function() {
@@ -82,7 +161,6 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
     .done(function(data) {
-      console.log('~~~~~~~~~~~~~~ USER EMAIL ~~~~~~~~~~', userEmail);
       const resultsLink = `http://localhost:8080/polls/${data}`
       const voteLink = `http://localhost:8080/polls/vote/${data}`
       const $pollConfirmation = pollCreated(resultsLink, voteLink);
