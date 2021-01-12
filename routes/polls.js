@@ -49,20 +49,21 @@ module.exports = (db) => {
     db.query(queryPost, param)
       .then(newPoll => {
         let poll = newPoll.rows;
+        const promises = []
         for(let i = 0; i < data.option.length; i++){
           let paramOption = [poll[0].id, data.option[i], data.description[i]]
-          // adding return on line below fixes unhandled promise error but then does not do the insert query
-          db.query(queryOption,paramOption)
-          .then(option => {
-            const pollId = option.rows[0].poll_id;
-            const newEmail = createEmail(creatorEmail, pollId);
-            // email the user with mailgun
-            mg.messages().send(newEmail, function(error, body) {
-              console.log(body);
-            })
-            res.json(pollId);
-          })
+          promises.push(db.query(queryOption,paramOption))
         }
+        Promise.all(promises)
+          .then(option => {
+          const pollId = option[0].rows[0].poll_id;
+          const newEmail = createEmail(creatorEmail, pollId);
+          // email the user with mailgun
+          mg.messages().send(newEmail, function(error, body) {
+            console.log(body);
+          })
+          res.json(pollId);
+        })
       })
       .catch((err) => {
         res.status(500).json({ error: err.message });

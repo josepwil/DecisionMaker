@@ -29,5 +29,21 @@ const createEmail = (userEmail, pollId) => {
     `
   }
 }
+const newVoteEmail = (userEmail, pollId) => {
+  return data = {
+    from: "Mailgun Sandbox <postmaster@sandboxbfeeb2c2d36e4f3c8fc8d3c598dce193.mailgun.org>",
+    to: userEmail,
+    subject: "Someone voted on your poll!",
+    text: `
+    Hey there!
 
-module.exports = { bordaCount, createEmail };
+    Someone just voted your poll, check out the latest results here:
+    http://localhost:8080/polls/${pollId}
+
+    Share this link with your other friends so they can vote:
+    http://localhost:8080/polls/vote/${pollId}
+    `
+  }
+}
+
+module.exports = { bordaCount, createEmail, newVoteEmail };
