@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { bordaCount } = require("../helper/helper")
+const { bordaCount, createEmail } = require("../helper/helper");
+const mailgun = require("mailgun-js");
+const DOMAIN = process.env.DOMAIN;
+const mg = mailgun({apiKey: process.env.API_KEY, domain: DOMAIN});
 
 const queryGet = `SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name
 FROM polls
@@ -39,6 +42,8 @@ module.exports = (db) => {
     let nameRequired;
     data.name_required? nameRequired = true : nameRequired = false
     let param = [1 /* CREATOR ID */,data.title, data.render_as, nameRequired]
+    const creatorEmail = data.email;
+
 
 
     db.query(queryPost, param)
@@ -46,17 +51,22 @@ module.exports = (db) => {
         let poll = newPoll.rows;
         for(let i = 0; i < data.option.length; i++){
           let paramOption = [poll[0].id, data.option[i], data.description[i]]
-          console.log(paramOption)
+          // adding return on line below fixes unhandled promise error but then does not do the insert query
           db.query(queryOption,paramOption)
           .then(option => {
-            console.log (option.rows)
+            const pollId = option.rows[0].poll_id;
+            const newEmail = createEmail(creatorEmail, pollId);
+            // email the user with mailgun
+            mg.messages().send(newEmail, function(error, body) {
+              console.log(body);
+            })
+            res.json(pollId);
           })
-          .catch((err) => {
-            res.status(500).json({ error: err.message });
-          });
         }
       })
-
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
   })
   return router;
 
