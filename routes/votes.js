@@ -1,5 +1,9 @@
 const express = require('express');
 const router  = express.Router();
+const { newVoteEmail } = require("../helper/helper");
+const mailgun = require("mailgun-js");
+const DOMAIN = process.env.DOMAIN;
+const mg = mailgun({apiKey: process.env.API_KEY, domain: DOMAIN});
 
 
 // access form to vote on a particular poll
@@ -28,6 +32,20 @@ module.exports = (db) => {
     const pollId = req.params.poll_id;
     const submitterName = req.body.submitter_name;
     const rankArray = req.body.options_rank.split(',');
+
+    // get the email of the poll creator
+    db.query(`
+    SELECT email FROM creators
+    JOIN polls ON creator_id = creators.id
+    WHERE polls.id = $1
+    `, [pollId])
+      .then(data => {
+        const email = data.rows[0].email;
+        const newVote = newVoteEmail(email, pollId);
+        mg.messages().send(newVote, function(error, body) {
+          console.log(body);
+        })
+      })
 
     // insert submission into submissions table
     const submissionsQuery = `
