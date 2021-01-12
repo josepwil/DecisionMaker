@@ -58,13 +58,17 @@ $(document).ready(() => {
     }
     return result;
   }
-  //loop the graphData
+
   $(function () {
     $("#chartContainer").CanvasJSChart({ //Pass chart options
       data: [
       {
       type: "column", //change it to column, spline, line, pie, etc
-      dataPoints: //graphdata[i]
+      dataPoints:  [
+        { label: 'apple', x: 1, y: 3, toolTipContent: 'Ash:1, Michael:3, Joe:1', poll_id: 1 },
+        { label: 'orange', x: 2, y: 6, toolTipContent: 'Ash:3, Michael:2, Joe:2', poll_id: 1 },
+        { label: 'banana', x: 3, y: 9, toolTipContent: 'Ash:2, Michael:1, Joe:3', poll_id: 1 }
+      ]
     }
     ]
   })
