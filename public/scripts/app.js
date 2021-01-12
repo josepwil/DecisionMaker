@@ -8,6 +8,46 @@ $(document).ready(() => {
   //   }
   // });
 
+  const renderGraph = function(obj) {
+    console.log('~~~~ we make our graph here: ', obj)
+    const $graph = `
+    <div>
+      <p>I am a graph for:</p>
+      ${obj}
+    </div>
+    `
+    $(".content-container").append($graph);
+  };
+
+
+  const allPolls = function(){
+    $.ajax({
+      method: "GET",
+      url: "/polls"
+    }).done(data => {
+      $(".content-container").empty();
+      const pollObjs = {}
+      for (let obj of data) {
+        const pollId = obj.poll_id;
+        if(pollObjs[pollId]) {
+          pollObjs[pollId].push(obj);
+        } else {
+          pollObjs[pollId] = [obj];
+        }
+      }
+      for(let key in pollObjs) {
+        renderGraph(key);
+      }
+    })
+  };
+  // call on page load
+  allPolls();
+
+  $(".allPolls").on("click", allPolls);
+
+
+
+
 
 
   const createNewPollForm = function() {
@@ -82,7 +122,6 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
     .done(function(data) {
-      console.log('~~~~~~~~~~~~~~ USER EMAIL ~~~~~~~~~~', userEmail);
       const resultsLink = `http://localhost:8080/polls/${data}`
       const voteLink = `http://localhost:8080/polls/vote/${data}`
       const $pollConfirmation = pollCreated(resultsLink, voteLink);
