@@ -57,6 +57,9 @@ $(document).ready(() => {
   ////////////////////////////////////////////////////////////
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
+    console.log(graphDataPoints);
+    console.log(graphType);
+    console.log(anchor);
     anchor.CanvasJSChart({ //Pass chart options
       title: {
         text: graphDataPoints[0].title
@@ -127,7 +130,8 @@ $(document).ready(() => {
       for (let graph of dataFromGraphs) {
         let newDiv = `<div id="chartContainer${i}" style="width:50%; height:300px;"></div>`
         $("#chartContainer").append(newDiv);
-        createGraph(graph[0].graphType.split(' ')[0], graph, $(`#chartContainer${i}`));
+        // createGraph('column', graph, $(`#chartContainer${i}`));
+        createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
         i++;
       }
 
