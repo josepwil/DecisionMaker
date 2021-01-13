@@ -111,9 +111,6 @@ $(document).ready(() => {
   ////////////////////////////////////////////////////////////
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
-    console.log(graphDataPoints);
-    console.log(graphType);
-    console.log(anchor);
     anchor.CanvasJSChart({ //Pass chart options
       title: {
         text: graphDataPoints[0].title
