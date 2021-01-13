@@ -125,7 +125,7 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
-      console.log('~~~~~graphData', graphData(data));
+      //console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
       $("#chartContainer").empty();       //if click on all poll mutiple times, no extra graph
       //squashing the graphs to the left
