@@ -43,4 +43,54 @@ const newVoteEmail = (userEmail, pollId) => {
   }
 }
 
+const graphData = (data) => {
+  let result = [];
+  //find number of polls
+  let pollNum = [];
+  for(let i = 0; i < data.length; i ++) {
+    if (data[i].poll_id > pollNum) {
+      pollNum = data[i].poll_id;
+    }
+  }
+  //for each poll
+  for(let pol = 1; pol <= pollNum; pol++){
+    let options = []
+    let pollData = []
+    let pollOpt = []
+    //for all data, count out options ID, and group data by poll
+    for(let l = 0; l < data.length; l++){
+      if (data[l].poll_id === pol) {
+        pollData.push(data[l]);
+        if(options.indexOf(data[l].option_id) === -1)
+        options.push(data[l].option_id);
+      }
+    }
+    //loop through data in one poll to work with each option
+    let sortedOptId = options.sort((a, b) => a - b)
+    //for each option
+    for (let b = 0; b < sortedOptId.length; b ++){
+      let totalPoint = 0;
+      let label;
+      let x = sortedOptId[b]
+      let voteData = ''
+      let poll_id = pol
+      //for each vote
+      for(let h = 0; h < pollData.length; h++){
+        if (pollData[h].option_id === sortedOptId[b]){
+          totalPoint += pollData[h].option_id;
+          label = pollData[h].label;
+          voteData += pollData[h].name + ':' + pollData[h].rank +',';
+        }
+      }
+      voteData = voteData.split(',')
+      voteData.pop();
+      voteData = voteData.join(', ')
+      let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id}
+      pollOpt.push (obj);
+    }
+    result.push(pollOpt);
+  }
+  return result;
+}
+
 module.exports = { bordaCount, createEmail, newVoteEmail };

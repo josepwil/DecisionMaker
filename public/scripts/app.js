@@ -117,6 +117,7 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
+      console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
       const dataFromGraphs = graphData(data)
       let i = 1;
