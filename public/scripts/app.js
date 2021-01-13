@@ -116,8 +116,6 @@ $(document).ready(() => {
   }
 
 
-
-
   const allPolls = function(){
     $.ajax({
       method: "GET",
@@ -150,7 +148,26 @@ $(document).ready(() => {
   }
   // call on page load
   allPolls();
-  $(".allPolls").on("click", allPolls);
+  // called on allpolls click (missing specific poll)
+  $(".allPolls").on("click", function() {
+    $.ajax({
+      method: "GET",
+      url: "/polls"
+    }).done(data => {
+      $(".content-container").empty();
+      $("#chartContainer").empty();       //if click on all poll mutiple times, no extra graph
+      //squashing the graphs to the left
+      const dataFromGraphs = graphData(data)
+      let i = 1;
+      for (let graph of dataFromGraphs) {
+        let newDiv = `<div id="chartContainer${i}" data-poll="${graph[0].poll_id}" class="graph" style="width:40%; height:300px;"></div>`
+        $("#chartContainer").append(newDiv);
+        // createGraph('column', graph, $(`#chartContainer${i}`));
+        createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
+        i++;
+      }
+    })
+  });
 
   // when a graph is clicked
   $(document).on("click", ".graph", function() {
