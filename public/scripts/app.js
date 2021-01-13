@@ -116,31 +116,18 @@ $(document).ready(() => {
   }
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> master
   const allPolls = function(){
     $.ajax({
       method: "GET",
       url: "/polls"
     }).done(data => {
-<<<<<<< HEAD
-      //console.log('~~~~~graphData', graphData(data));
-=======
->>>>>>> master
       $(".content-container").empty();
       $("#chartContainer").empty();       //if click on all poll mutiple times, no extra graph
       //squashing the graphs to the left
       const dataFromGraphs = graphData(data)
       let i = 1;
       for (let graph of dataFromGraphs) {
-<<<<<<< HEAD
-        let newDiv = `<div id="chartContainer${i}" class="graph" style="width:40%; height:300px;"></div>`
-=======
         let newDiv = `<div id="chartContainer${i}" data-poll="${graph[0].poll_id}" class="graph" style="width:40%; height:300px;"></div>`
->>>>>>> master
         $("#chartContainer").append(newDiv);
         // createGraph('column', graph, $(`#chartContainer${i}`));
         createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
@@ -209,34 +196,43 @@ $(document).ready(() => {
   const createNewPollForm = function() {
     const $markup = $(`
     <form class="newPollForm">
-    <h3>Add A New Poll</h3>
-        <label for="title">Poll Title:</label>
-        <input type="text" id="title" name="title">
+      <h3>Add A New Poll</h3>
+        <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title">
+        </div>
         <div class="options">
         <div>
-        <label for="choice">Option:</label>
-        <input type="text" id="option" name="option">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
-<<<<<<< HEAD
+          <div>
+          <label for="choice">Option:</label>
+          <input type="text" id="option" name="option">
+          </div>
+          <div>
+          <label for="description">Description:</label>
+          <textarea id="description" name="description"></textarea>
+          </div>
         </div>
         </div>
-=======
+        <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
+        <div>
+          <div>
+            <label for="name_required">Voter Must Enter Name?</label>
+            <input type="checkbox" id="name_required" name="name_required">
+          </div>
+          <div>
+            <label for="render_as">Render Results as:</label>
+            <select name="render_as" id="render_as">
+              <option value="column">Bar Chart</option>
+              <option value="pie">Pie Chart</option>
+              <option value="line">Line Chart</option>
+            </select>
+          </div>
         </div>
+        <div id="email-input">
+          <label for="email">Email Address:</label>
+          <input type="text" id="email" name="email">
         </div>
->>>>>>> master
-        <button type="button" class="addNewOption">Add</button>
-        <label for="name_required">Voter Must Enter Name?</label>
-        <input type="checkbox" id="name_required" name="name_required">
-        <label for="render_as">Render Results as:</label>
-        <select name="render_as" id="render_as">
-          <option value="column">Bar Chart</option>
-          <option value="pie">Pie Chart</option>
-          <option value="line">Line Chart</option>
-        </select>
-        <label for="email">Email Address:</label>
-        <input type="text" id="email" name="email">
-        <button>Create</button>
+        <button>Create Poll</button>
       </form>
 
     `)
@@ -267,10 +263,14 @@ $(document).ready(() => {
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
     <div>
-    <label for="choice">Option:</label>
-    <input type="text" id="option" name="option">
-    <label for="description">Description:</label>
-    <textarea id="description" name="description"></textarea>
+      <div>
+        <label for="choice">Option:</label>
+        <input type="text" id="option" name="option">
+      </div>
+      <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+      </div>
     </div>
     `;
     $(".options").append($newInput);
