@@ -22,7 +22,7 @@ const createEmail = (userEmail, pollId) => {
     http://localhost:8080/polls/vote/${pollId}
 
     Check out the results here:
-    http://localhost:8080/polls/${pollId}
+    http://localhost:8080/?id=${pollId}
     `
   }
 }
@@ -35,7 +35,7 @@ const newVoteEmail = (userEmail, pollId) => {
     Hey there!
 
     Someone just voted your poll, check out the latest results here:
-    http://localhost:8080/polls/${pollId}
+    http://localhost:8080/?id=${pollId}
 
     Share this link with your other friends so they can vote:
     http://localhost:8080/polls/vote/${pollId}
