@@ -57,9 +57,6 @@ $(document).ready(() => {
   ////////////////////////////////////////////////////////////
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
-    console.log(graphDataPoints);
-    console.log(graphType);
-    console.log(anchor);
     anchor.CanvasJSChart({ //Pass chart options
       backgroundColor: "#cad2de",
       title: {
@@ -105,14 +102,15 @@ $(document).ready(() => {
     if(id[0] === '?id'){
       let pollID = id[id.length - 1]
       const specificGraph = pollObjs[pollID];
-      const dataFromGraph = graphData(specificGraph);
+      let dataFromGraph = graphData(specificGraph).pop();
+
       const graphType = specificGraph[0].render_graph
       const graphTitle = specificGraph[0].title;
       const newModal = createModal(graphTitle);
       $(".content-container").append(newModal);
       $("#exampleModalCenter").modal('show');
       $('#exampleModalCenter').on('shown.bs.modal', function () {
-        createGraph(graphType, dataFromGraph[1], $('#modalGraph'));
+        createGraph(graphType, dataFromGraph, $('#modalGraph'));
     });
     }
   }
@@ -125,20 +123,18 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
-      //console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
       $("#chartContainer").empty();       //if click on all poll mutiple times, no extra graph
       //squashing the graphs to the left
       const dataFromGraphs = graphData(data)
       let i = 1;
       for (let graph of dataFromGraphs) {
-        let newDiv = `<div id="chartContainer${i}" class="graph" style="width:40%; height:300px;"></div>`
+        let newDiv = `<div id="chartContainer${i}" data-poll="${graph[0].poll_id}" class="graph" style="width:40%; height:300px;"></div>`
         $("#chartContainer").append(newDiv);
         // createGraph('column', graph, $(`#chartContainer${i}`));
         createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
         i++;
       }
-
       // data needed for specificPoll function
       const pollObjs = {}
       for (let obj of data) {
@@ -154,12 +150,30 @@ $(document).ready(() => {
   }
   // call on page load
   allPolls();
-
   $(".allPolls").on("click", allPolls);
 
+  // when a graph is clicked
+  $(document).on("click", ".graph", function() {
+    const pollid = $(this).data('poll');
+    $.ajax({
+      method: "GET",
+      url: "/polls"
+    }).done(data => {
+      const targetPoll = data.filter(obj => obj.poll_id === pollid);
+      let dataFromGraph = graphData(targetPoll).pop();
+      const graphType = targetPoll[0].render_graph
+      const graphTitle = targetPoll[0].title;
+      const newModal = createModal(graphTitle);
+      $(".content-container").append(newModal);
+      $("#exampleModalCenter").modal('show');
+      $('#exampleModalCenter').on('shown.bs.modal', function () {
+        createGraph(graphType, dataFromGraph, $('#modalGraph'));
+    });
+
+    })
 
 
-
+  })
 
 
   const createNewPollForm = function() {
@@ -239,15 +253,12 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
     .done(function(data) {
-      const resultsLink = `http://localhost:8080/polls/${data}`
+      const resultsLink = `http://localhost:8080/?id=${data}`
       const voteLink = `http://localhost:8080/polls/vote/${data}`
       const $pollConfirmation = pollCreated(resultsLink, voteLink);
       $(".content-container").empty();
       $(".content-container").append($pollConfirmation);
       })
   })
-
-
-
 
 });
