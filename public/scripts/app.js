@@ -1,3 +1,57 @@
+
+const graphData = (data) => {
+  let result = [];
+  //find number of polls
+  let pollNum = [];
+  for(let i = 0; i < data.length; i ++) {
+    if (data[i].poll_id > pollNum) {
+      pollNum = data[i].poll_id;
+    }
+  }
+  //for each poll
+  for(let pol = 1; pol <= pollNum; pol++){
+    let options = []
+    let pollData = []
+    let pollOpt = []
+    //for all data, count out options ID, and group data by poll
+    for(let l = 0; l < data.length; l++){
+      if (data[l].poll_id === pol) {
+        pollData.push(data[l]);
+        if(options.indexOf(data[l].option_id) === -1)
+        options.push(data[l].option_id);
+      }
+    }
+    //loop through data in one poll to work with each option
+    let sortedOptId = options.sort((a, b) => a - b)
+    //for each option
+    for (let b = 0; b < sortedOptId.length; b ++){
+      let totalPoint = 0;
+      let label;
+      let x = sortedOptId[b]
+      let voteData = ''
+      let poll_id = pol
+      let poll_title = ''
+      let graphType = ''
+      //for each vote
+      for(let h = 0; h < pollData.length; h++){
+        if (pollData[h].option_id === sortedOptId[b]){
+          poll_title = pollData[h].title;
+          totalPoint += pollData[h].point;
+          label = pollData[h].label;
+          voteData += pollData[h].name + ':' + pollData[h].rank +',';
+          graphType = pollData[h].render_graph
+        }
+      }
+      voteData = voteData.split(',')
+      voteData.pop();
+      voteData = voteData.join(', ')
+      let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id, poll_title, graphType}
+      pollOpt.push (obj);
+    }
+    result.push(pollOpt);
+  }
+  return result;
+}
 $(document).ready(() => {
   // $.ajax({
   //   method: "GET",
@@ -9,71 +63,23 @@ $(document).ready(() => {
   // });
 
   // graph magic (hopefully)
-  const graphData = (data) => {
-    let result = [];
-    //find number of polls
-    let pollNum = [];
-    for(let i = 0; i < data.length; i ++) {
-      if (data[i].poll_id > pollNum) {
-        pollNum = data[i].poll_id;
-      }
-    }
-    //for each poll
-    for(let pol = 1; pol <= pollNum; pol++){
-      let options = []
-      let pollData = []
-      let pollOpt = []
-      //for all data, count out options ID, and group data by poll
-      for(let l = 0; l < data.length; l++){
-        if (data[l].poll_id === pol) {
-          pollData.push(data[l]);
-          if(options.indexOf(data[l].option_id) === -1)
-          options.push(data[l].option_id);
-        }
-      }
-      //loop through data in one poll to work with each option
-      let sortedOptId = options.sort((a, b) => a - b)
-      //for each option
-      for (let b = 0; b < sortedOptId.length; b ++){
-        let totalPoint = 0;
-        let label;
-        let x = sortedOptId[b]
-        let voteData = ''
-        let poll_id = pol
-        //for each vote
-        for(let h = 0; h < pollData.length; h++){
-          if (pollData[h].option_id === sortedOptId[b]){
-            totalPoint += pollData[h].option_id;
-            label = pollData[h].label;
-            voteData += pollData[h].name + ':' + pollData[h].rank +',';
-          }
-        }
-        voteData = voteData.split(',')
-        voteData.pop();
-        voteData = voteData.join(', ')
-        let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id}
-        pollOpt.push (obj);
-      }
-      result.push(pollOpt);
-    }
-    return result;
-  }
 
-  $(function () {
-    $("#chartContainer").CanvasJSChart({ //Pass chart options
-      data: [
-      {
-      type: "column", //change it to column, spline, line, pie, etc
-      dataPoints:  [
-        { label: 'apple', x: 1, y: 3, toolTipContent: 'Ash:1, Michael:3, Joe:1', poll_id: 1 },
-        { label: 'orange', x: 2, y: 6, toolTipContent: 'Ash:3, Michael:2, Joe:2', poll_id: 1 },
-        { label: 'banana', x: 3, y: 9, toolTipContent: 'Ash:2, Michael:1, Joe:3', poll_id: 1 }
-      ]
-    }
-    ]
-  })
 
-  });
+  // $(function () {
+  //   $("#chartContainer").CanvasJSChart({ //Pass chart options
+  //     data: [
+  //     {
+  //     type: "column", //change it to column, spline, line, pie, etc
+  //     dataPoints:  [
+  //       { label: 'apple', x: 1, y: 3, toolTipContent: 'Ash:1, Michael:3, Joe:1', poll_id: 1 },
+  //       { label: 'orange', x: 2, y: 6, toolTipContent: 'Ash:3, Michael:2, Joe:2', poll_id: 1 },
+  //       { label: 'banana', x: 3, y: 9, toolTipContent: 'Ash:2, Michael:1, Joe:3', poll_id: 1 }
+  //     ]
+  //   }
+  //   ]
+  // })
+
+  // });
 
 
 
@@ -103,22 +109,37 @@ $(document).ready(() => {
   }
 
   const renderGraph = function(obj) {
-    console.log('~~~~ we make our graph here: ', obj)
-    const $graph = `
-    <div>
-      <p>I am a graph for:</p>
-      ${obj}
-    </div>
-    `
-    $(".content-container").append($graph);
+    $.ajax({
+      method: "GET",
+      url: "/polls"
+    }).done(data => {
+      gData = graphData(data);
+      console.log (gData);
+      for(let i = 1; i <= gData.length; i++){
+        $(`#chartContainer${i-1}`).after(`<div style="width:50%; height:300px;" id=chartContainer${i}>test</div>`)
+        $(function () {
+          $(`#chartContainer${i}`).CanvasJSChart({ //Pass chart options
+            data: [
+            {
+            type: "column", //change it to column, spline, line, pie, etc
+            dataPoints: gData[i-1]
+          }
+          ]
+        })
+
+        });
+
+      }
+    })
   };
+  renderGraph();
 
   const specificPoll = function(pollObjs){
     let id = window.location.search.split('=');
     if(id[0] === '?id'){
       let pollID = id[id.length - 1]
       const specificGraph = {[pollID]: pollObjs[pollID]}
-      console.log('specific graph ~~~~', specificGraph);
+      // console.log('specific graph ~~~~', specificGraph);
       const newModal = createModal(specificGraph);
       $(".content-container").append(newModal);
       $("#exampleModalCenter").modal('show');
@@ -131,7 +152,7 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
-      console.log('~~~~~graphData', graphData(data));
+      // console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
       const pollObjs = {}
       for (let obj of data) {
@@ -145,7 +166,7 @@ $(document).ready(() => {
       for(let key in pollObjs) {
 
       }
-      console.log(pollObjs);
+      // console.log(pollObjs);
 
       specificPoll(pollObjs);
     })
@@ -239,4 +260,8 @@ $(document).ready(() => {
       $(".content-container").append($pollConfirmation);
       })
   })
+
+
+
+
 });

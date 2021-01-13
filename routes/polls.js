@@ -6,7 +6,7 @@ const DOMAIN = process.env.DOMAIN;
 const mg = mailgun({apiKey: process.env.API_KEY, domain: DOMAIN});
 
 const queryGet = `
-SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name, option_id
+SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name, option_id, title, render_graph
 FROM polls
 JOIN submissions ON polls.id = submissions.poll_id
 JOIN votes ON submissions.id = submission_id
@@ -35,7 +35,7 @@ module.exports = (db) => {
       .then((data) => {
         let rows = data.rows;
         let dataArray = bordaCount(rows);
-        console.log(dataArray);
+        // console.log(dataArray);
         res.json(dataArray);
       })
       .catch((err) => {
