@@ -1,9 +1,71 @@
 // See: https://sass-lang.com/
 
 body {
-  background-color: #EEE;
+  background-color: rosybrown;
 
   h1 {
     color: #244751;
   }
 }
+
+nav {
+  background-color: orange;
+  height: 5em;
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+nav div h3{
+  font-style: initial;
+  font-weight: 800;
+  color: black;
+  margin:1em;
+}
+.navButton{
+  margin: 1em;
+}
+button{
+  border:none;
+  border-radius: 1em;
+  background-color: gray;
+}
+button:focus{
+  outline: none;
+}
+
+#chartContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content:space-around;
+  flex-wrap: wrap;
+}
+
+.graph{
+  margin:1em 0 1em;
+}
+.canvasjs-chart-canvas {
+  border: 2px solid blue;
+}
+
+
+.newPollForm{
+  margin:auto;
+  width:70%;
+  background-color: cornsilk;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.newPollForm .options{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.newPollForm .options div {
+  margin :1em;
+  display:flex;
+  align-items: flex-start;
+}
+
