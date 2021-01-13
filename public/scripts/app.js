@@ -1,13 +1,58 @@
-$(document).ready(() => {
-  // $.ajax({
-  //   method: "GET",
-  //   url: "/api/users"
-  // }).done((users) => {
-  //   for(user of users) {
-  //     $("<div>").text(user.name).appendTo($("body"));
-  //   }
-  // });
 
+const graphData = (data) => {
+  let result = [];
+  //find number of polls
+  let pollNum = [];
+  for(let i = 0; i < data.length; i ++) {
+    if (data[i].poll_id > pollNum) {
+      pollNum = data[i].poll_id;
+    }
+  }
+  //for each poll
+  for(let pol = 1; pol <= pollNum; pol++){
+    let options = []
+    let pollData = []
+    let pollOpt = []
+    //for all data, count out options ID, and group data by poll
+    for(let l = 0; l < data.length; l++){
+      if (data[l].poll_id === pol) {
+        pollData.push(data[l]);
+        if(options.indexOf(data[l].option_id) === -1)
+        options.push(data[l].option_id);
+      }
+    }
+    //loop through data in one poll to work with each option
+    let sortedOptId = options.sort((a, b) => a - b)
+    //for each option
+    for (let b = 0; b < sortedOptId.length; b ++){
+      let totalPoint = 0;
+      let label;
+      let x = sortedOptId[b]
+      let voteData = ''
+      let poll_id = pol
+      let title = ''
+      let graphType = ''
+      //for each vote
+      for(let h = 0; h < pollData.length; h++){
+        if (pollData[h].option_id === sortedOptId[b]){
+          poll_title = pollData[h].title;
+          totalPoint += pollData[h].point;
+          label = pollData[h].label;
+          voteData += pollData[h].name + ':' + pollData[h].rank +',';
+          graphType = pollData[h].render_graph
+        }
+      }
+      voteData = voteData.split(',')
+      voteData.pop();
+      voteData = voteData.join(', ')
+      let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id, title, graphType}
+      pollOpt.push (obj);
+    }
+    result.push(pollOpt);
+  }
+  return result;
+}
+$(document).ready(() => {
   // graph magic (hopefully)
   const graphData = (data) => {
     let result = [];
@@ -40,18 +85,22 @@ $(document).ready(() => {
         let x = sortedOptId[b]
         let voteData = ''
         let poll_id = pol
+        let title = ''
+        let graphType = ''
         //for each vote
         for(let h = 0; h < pollData.length; h++){
           if (pollData[h].option_id === sortedOptId[b]){
-            totalPoint += pollData[h].option_id;
+            title = pollData[h].title;
+            totalPoint += pollData[h].point;
             label = pollData[h].label;
             voteData += pollData[h].name + ':' + pollData[h].rank +',';
+            graphType = pollData[h].render_graph
           }
         }
         voteData = voteData.split(',')
         voteData.pop();
         voteData = voteData.join(', ')
-        let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id}
+        let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id, title, graphType}
         pollOpt.push (obj);
       }
       result.push(pollOpt);
@@ -59,41 +108,43 @@ $(document).ready(() => {
     return result;
   }
 
-  $(function () {
-    $("#chartContainer").CanvasJSChart({ //Pass chart options
+  ////////////////////////////////////////////////////////////
+
+  const createGraph = function(graphType, graphDataPoints, anchor) {
+    console.log(graphDataPoints);
+    console.log(graphType);
+    console.log(anchor);
+    anchor.CanvasJSChart({ //Pass chart options
+      title: {
+        text: graphDataPoints[0].title
+      },
       data: [
-      {
-      type: "column", //change it to column, spline, line, pie, etc
-      dataPoints:  [
-        { label: 'apple', x: 1, y: 3, toolTipContent: 'Ash:1, Michael:3, Joe:1', poll_id: 1 },
-        { label: 'orange', x: 2, y: 6, toolTipContent: 'Ash:3, Michael:2, Joe:2', poll_id: 1 },
-        { label: 'banana', x: 3, y: 9, toolTipContent: 'Ash:2, Michael:1, Joe:3', poll_id: 1 }
+        {
+          type: graphType, //change it to column, spline, line, pie, etc
+          dataPoints: graphDataPoints
+        }
       ]
-    }
-    ]
-  })
-
-  });
+    })
+  };
 
 
 
-  const createModal = function(content) {
+
+  const createModal = function(graphTitle) {
     const $markup = `
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">${graphTitle}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>${content}</p>
+            <div id="modalGraph" style="height: 360px; width: 100%;></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
@@ -102,28 +153,23 @@ $(document).ready(() => {
     return $markup;
   }
 
-  const renderGraph = function(obj) {
-    console.log('~~~~ we make our graph here: ', obj)
-    const $graph = `
-    <div>
-      <p>I am a graph for:</p>
-      ${obj}
-    </div>
-    `
-    $(".content-container").append($graph);
-  };
-
   const specificPoll = function(pollObjs){
     let id = window.location.search.split('=');
     if(id[0] === '?id'){
       let pollID = id[id.length - 1]
-      const specificGraph = {[pollID]: pollObjs[pollID]}
-      console.log('specific graph ~~~~', specificGraph);
-      const newModal = createModal(specificGraph);
+      const specificGraph = pollObjs[pollID];
+      const dataFromGraph = graphData(specificGraph);
+      const graphType = specificGraph[0].render_graph
+      const graphTitle = specificGraph[0].title;
+      const newModal = createModal(graphTitle);
       $(".content-container").append(newModal);
       $("#exampleModalCenter").modal('show');
+      $('#exampleModalCenter').on('shown.bs.modal', function () {
+        createGraph(graphType, dataFromGraph[1], $('#modalGraph'));
+    });
     }
   }
+
 
 
   const allPolls = function(){
@@ -131,8 +177,18 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
-      console.log('~~~~~graphData', graphData(data));
+      // console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
+      const dataFromGraphs = graphData(data)
+      let i = 1;
+      for (let graph of dataFromGraphs) {
+        let newDiv = `<div id="chartContainer${i}" style="width:50%; height:300px;"></div>`
+        $("#chartContainer").append(newDiv);
+        createGraph(graph[0].graphType.split(' ')[0], graph, $(`#chartContainer${i}`));
+        i++;
+      }
+
+      // data needed for specificPoll function
       const pollObjs = {}
       for (let obj of data) {
         const pollId = obj.poll_id;
@@ -142,14 +198,9 @@ $(document).ready(() => {
           pollObjs[pollId] = [obj];
         }
       }
-      for(let key in pollObjs) {
-
-      }
-      console.log(pollObjs);
-
       specificPoll(pollObjs);
     })
-  };
+  }
   // call on page load
   allPolls();
 
@@ -177,9 +228,9 @@ $(document).ready(() => {
         <input type="checkbox" id="name_required" name="name_required">
         <label for="render_as">Render Results as:</label>
         <select name="render_as" id="render_as">
-          <option value="bar">Bar Chart</option>
-          <option value="Pie">Pie Chart</option>
-          <option value="Line">Line Chart</option>
+          <option value="column">Bar Chart</option>
+          <option value="pie">Pie Chart</option>
+          <option value="line">Line Chart</option>
         </select>
         <label for="email">Email Address:</label>
         <input type="text" id="email" name="email">
@@ -206,6 +257,7 @@ $(document).ready(() => {
   // open new poll form
   $(".createPoll").on("click", function() {
       $(".content-container").empty();
+      $("#chartContainer").empty();
       const $pollForm = createNewPollForm();
       $(".content-container").append($pollForm);
   });
@@ -239,4 +291,8 @@ $(document).ready(() => {
       $(".content-container").append($pollConfirmation);
       })
   })
+
+
+
+
 });
