@@ -6,12 +6,11 @@ const DOMAIN = process.env.DOMAIN;
 const mg = mailgun({apiKey: process.env.API_KEY, domain: DOMAIN});
 
 const queryGet = `
-SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name, option_id, title, render_graph
+SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name, option_id, render_graph, title
 FROM polls
 JOIN submissions ON polls.id = submissions.poll_id
 JOIN votes ON submissions.id = submission_id
 JOIN options ON options.id = option_id
-WHERE creator_id = 1
 ORDER BY poll_id;`
 
 const creatorQuery = `
