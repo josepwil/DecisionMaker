@@ -1,57 +1,3 @@
-
-const graphData = (data) => {
-  let result = [];
-  //find number of polls
-  let pollNum = [];
-  for(let i = 0; i < data.length; i ++) {
-    if (data[i].poll_id > pollNum) {
-      pollNum = data[i].poll_id;
-    }
-  }
-  //for each poll
-  for(let pol = 1; pol <= pollNum; pol++){
-    let options = []
-    let pollData = []
-    let pollOpt = []
-    //for all data, count out options ID, and group data by poll
-    for(let l = 0; l < data.length; l++){
-      if (data[l].poll_id === pol) {
-        pollData.push(data[l]);
-        if(options.indexOf(data[l].option_id) === -1)
-        options.push(data[l].option_id);
-      }
-    }
-    //loop through data in one poll to work with each option
-    let sortedOptId = options.sort((a, b) => a - b)
-    //for each option
-    for (let b = 0; b < sortedOptId.length; b ++){
-      let totalPoint = 0;
-      let label;
-      let x = sortedOptId[b]
-      let voteData = ''
-      let poll_id = pol
-      let title = ''
-      let graphType = ''
-      //for each vote
-      for(let h = 0; h < pollData.length; h++){
-        if (pollData[h].option_id === sortedOptId[b]){
-          poll_title = pollData[h].title;
-          totalPoint += pollData[h].point;
-          label = pollData[h].label;
-          voteData += pollData[h].name + ':' + pollData[h].rank +',';
-          graphType = pollData[h].render_graph
-        }
-      }
-      voteData = voteData.split(',')
-      voteData.pop();
-      voteData = voteData.join(', ')
-      let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id, title, graphType}
-      pollOpt.push (obj);
-    }
-    result.push(pollOpt);
-  }
-  return result;
-}
 $(document).ready(() => {
   // graph magic (hopefully)
   const graphData = (data) => {
@@ -115,6 +61,7 @@ $(document).ready(() => {
     console.log(graphType);
     console.log(anchor);
     anchor.CanvasJSChart({ //Pass chart options
+      backgroundColor: "#cad2de",
       title: {
         text: graphDataPoints[0].title
       },
@@ -172,19 +119,23 @@ $(document).ready(() => {
 
 
 
+
   const allPolls = function(){
     $.ajax({
       method: "GET",
       url: "/polls"
     }).done(data => {
-      // console.log('~~~~~graphData', graphData(data));
+      //console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
+      $("#chartContainer").empty();       //if click on all poll mutiple times, no extra graph
+      //squashing the graphs to the left
       const dataFromGraphs = graphData(data)
       let i = 1;
       for (let graph of dataFromGraphs) {
-        let newDiv = `<div id="chartContainer${i}" style="width:50%; height:300px;"></div>`
+        let newDiv = `<div id="chartContainer${i}" class="graph" style="width:40%; height:300px;"></div>`
         $("#chartContainer").append(newDiv);
-        createGraph(graph[0].graphType.split(' ')[0], graph, $(`#chartContainer${i}`));
+        // createGraph('column', graph, $(`#chartContainer${i}`));
+        createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
         i++;
       }
 
@@ -213,17 +164,19 @@ $(document).ready(() => {
 
   const createNewPollForm = function() {
     const $markup = $(`
-      <h3>Add A New Poll</h3>
-      <form class="newPollForm">
+    <form class="newPollForm">
+    <h3>Add A New Poll</h3>
         <label for="title">Poll Title:</label>
         <input type="text" id="title" name="title">
         <div class="options">
-          <label for="choice">Option:</label>
-          <input type="text" id="option" name="option">
-          <label for="description">Description</label>
-          <textarea id="description" name="description"></textarea>
-          <p class="addNewOption">Add</p>
+        <div>
+        <label for="choice">Option:</label>
+        <input type="text" id="option" name="option">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
         </div>
+        </div>
+        <button type="button" class="addNewOption">Add</button>
         <label for="name_required">Voter Must Enter Name?</label>
         <input type="checkbox" id="name_required" name="name_required">
         <label for="render_as">Render Results as:</label>
@@ -264,10 +217,12 @@ $(document).ready(() => {
 
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
+    <div>
     <label for="choice">Option:</label>
     <input type="text" id="option" name="option">
     <label for="description">Description:</label>
     <textarea id="description" name="description"></textarea>
+    </div>
     `;
     $(".options").append($newInput);
   });
