@@ -5,7 +5,8 @@ const mailgun = require("mailgun-js");
 const DOMAIN = process.env.DOMAIN;
 const mg = mailgun({apiKey: process.env.API_KEY, domain: DOMAIN});
 
-const queryGet = `SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name
+const queryGet = `
+SELECT option_name as label, rank, submission_id as sub_id, polls.id as poll_id, submitter_name as name, option_id
 FROM polls
 JOIN submissions ON polls.id = submissions.poll_id
 JOIN votes ON submissions.id = submission_id
