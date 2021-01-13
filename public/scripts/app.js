@@ -31,18 +31,22 @@ $(document).ready(() => {
         let x = sortedOptId[b]
         let voteData = ''
         let poll_id = pol
+        let title = ''
+        let graphType = ''
         //for each vote
         for(let h = 0; h < pollData.length; h++){
           if (pollData[h].option_id === sortedOptId[b]){
+            title = pollData[h].title;
             totalPoint += pollData[h].point;
             label = pollData[h].label;
             voteData += pollData[h].name + ':' + pollData[h].rank +',';
+            graphType = pollData[h].render_graph
           }
         }
         voteData = voteData.split(',')
         voteData.pop();
         voteData = voteData.join(', ')
-        let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id}
+        let obj = {label, x, y : totalPoint, toolTipContent : voteData, poll_id, title, graphType}
         pollOpt.push (obj);
       }
       result.push(pollOpt);
@@ -53,10 +57,12 @@ $(document).ready(() => {
   ////////////////////////////////////////////////////////////
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
-
+    console.log(graphDataPoints);
+    console.log(graphType);
+    console.log(anchor);
     anchor.CanvasJSChart({ //Pass chart options
       title: {
-        text: "the graph title goes here"
+        text: graphDataPoints[0].title
       },
       data: [
         {
@@ -117,14 +123,15 @@ $(document).ready(() => {
       method: "GET",
       url: "/polls"
     }).done(data => {
-      console.log('~~~~~graphData', graphData(data));
+      // console.log('~~~~~graphData', graphData(data));
       $(".content-container").empty();
       const dataFromGraphs = graphData(data)
       let i = 1;
       for (let graph of dataFromGraphs) {
         let newDiv = `<div id="chartContainer${i}" style="width:50%; height:300px;"></div>`
         $("#chartContainer").append(newDiv);
-        createGraph('column', graph, $(`#chartContainer${i}`));
+        // createGraph('column', graph, $(`#chartContainer${i}`));
+        createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
         i++;
       }
 
@@ -231,4 +238,8 @@ $(document).ready(() => {
       $(".content-container").append($pollConfirmation);
       })
   })
+
+
+
+
 });
