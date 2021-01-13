@@ -34,7 +34,7 @@ module.exports = (db) => {
       .then((data) => {
         let rows = data.rows;
         let dataArray = bordaCount(rows);
-        console.log(dataArray);
+        // console.log(dataArray);
         res.json(dataArray);
       })
       .catch((err) => {
