@@ -199,25 +199,28 @@ $(document).ready(() => {
     <form class="newPollForm">
       <h3>Add A New Poll</h3>
         <div id="titleInput">
-          <label for="title">Title</label>
+          <label for="title">Title:</label>
           <input type="text" id="title" class= "inputField"name="title">
         </div>
         <div class="options">
-        <div>
           <div>
-          <label for="choice">Option</label>
-          <input type="text" class="inputField option" name="option">
-          </div>
-          <div>
-          <label for="description">Description</label>
-          <textarea id="description" class="inputField" name="description"></textarea>
+            <div>
+              <label for="choice">Option:</label>
+              <input type="text" class="inputField optionCheck" id="option" name="option">
+            </div>
+            <div>
+              <label for="description">Description:</label>
+              <textarea id="description" class="inputField" name="description"></textarea>
+            </div>
           </div>
         </div>
+        <div>
+          <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
+          <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
         </div>
-        <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
         <div>
           <div>
-            <label for="name_required">Voter name required?</label>
+            <label for="name_required">Voter Must Enter Name?</label>
             <input type="checkbox" id="name_required" /><label for="name_required" id="label">Toggle</label>
           </div>
           <div>
@@ -261,18 +264,19 @@ $(document).ready(() => {
       const $pollForm = createNewPollForm();
       $(".content-container").append($pollForm);
   });
+  $(document).on('click','.addNewOption',function(){
 
+  });
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
     <div>
       <div>
         <label for="choice">Option:</label>
-        <input class="inputField option" type="text" name="option">
+        <input class="inputField optionCheck" type="text" id="option" name="option">
       </div>
       <div>
         <label for="description">Description:</label>
         <textarea class="inputField" id="description" name="description"></textarea>
-      </div>
     </div>
     `;
     $(".options").append($newInput);
@@ -283,12 +287,16 @@ $(document).ready(() => {
     event.preventDefault();
     $("#error").empty()
     const title = $(this).find("#title").val();
-    const options = $(this).serialize();
-    console.log (options);
-    if(!title){
+    const options = $(this).find(".optionCheck").serialize().split('&').filter(x => x === "option=");
+    console.log (options[0]);
+    if(!title || options[0]){
       if(!title){
-        $("#error").append("<p>title cannot be empty<p>")
+        $("#error").append("<p>title cannot be empty</p>")
+      };
+      if(options[0]){
+        $("#error").append("<p>option cannot be empty</p>")
       }
+
       return;
     }
 

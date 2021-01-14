@@ -179,6 +179,87 @@ button.addNewOption{
   cursor: pointer;
   background-color: #00A9C7;
 }
+button.addNewOption{
+  border:none;
+  border-radius: 1em;
+  font-size: 18;
+  height: 2.25em;
+  width: 2.25em;
+  background-color: whitesmoke;
+  margin-bottom:none;
+}
+
+#create{
+  background-color: #ACE2EA;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  // font-family: 'Damion', cursive;
+  border-radius: 0.5em;
+  font-size: 30px;
+  padding: 5px 10px;
+  margin-top:1em;
+}
+#create:hover {
+  cursor: pointer;
+  background-color: #00A9C7;
+}
+button.addNewOption{
+  border:none;
+  border-radius: 1em;
+  font-size: 18;
+  height: 2.25em;
+  width: 2.25em;
+  background-color: whitesmoke;
+  margin-bottom:none;
+}
+
+#create{
+  background-color: #ACE2EA;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  // font-family: 'Damion', cursive;
+  border-radius: 0.5em;
+  font-size: 30px;
+  padding: 5px 10px;
+  margin-top:1em;
+}
+#create:hover {
+  cursor: pointer;
+  background-color: #00A9C7;
+}
+button.addNewOption{
+  border:none;
+  border-radius: 1em;
+  font-size: 18;
+  height: 2.25em;
+  width: 2.25em;
+  background-color: whitesmoke;
+  margin-bottom:none;
+}
+
+#create{
+  background-color: #ACE2EA;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  // font-family: 'Damion', cursive;
+  border-radius: 0.5em;
+  font-size: 30px;
+  padding: 5px 10px;
+  margin-top:1em;
+}
+#create:hover {
+  cursor: pointer;
+  background-color: #00A9C7;
+}
 
 
 #render_as{
@@ -194,6 +275,13 @@ button.addNewOption{
 
 .content-container{
   margin-top:6em
+}
+
+#error{
+  display: flex;
+  flex-direction: column;
+  font-size:80%;
+  color:red;
 }
 // ///////////////////////////////
 
