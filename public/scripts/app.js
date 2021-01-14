@@ -58,7 +58,7 @@ $(document).ready(() => {
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
     anchor.CanvasJSChart({ //Pass chart options
-      backgroundColor: "#cad2de",
+      backgroundColor: "#D9EDDF",
       title: {
         text: graphDataPoints[0].title
       },
@@ -196,29 +196,43 @@ $(document).ready(() => {
   const createNewPollForm = function() {
     const $markup = $(`
     <form class="newPollForm">
-    <h3>Add A New Poll</h3>
-        <label for="title">Poll Title:</label>
-        <input type="text" id="title" name="title">
+      <h3>Add A New Poll</h3>
+        <div id="titleInput">
+          <label for="title">Title:</label>
+          <input type="text" id="title" class= "inputField"name="title">
+        </div>
         <div class="options">
         <div>
-        <label for="choice">Option:</label>
-        <input type="text" id="option" name="option">
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
+          <div>
+          <label for="choice">Option:</label>
+          <input type="text" class="inputField" id="option" name="option">
+          </div>
+          <div>
+          <label for="description">Description:</label>
+          <textarea id="description" class="inputField" name="description"></textarea>
+          </div>
         </div>
         </div>
-        <button type="button" class="addNewOption">Add</button>
-        <label for="name_required">Voter Must Enter Name?</label>
-        <input type="checkbox" id="name_required" name="name_required">
-        <label for="render_as">Render Results as:</label>
-        <select name="render_as" id="render_as">
-          <option value="column">Bar Chart</option>
-          <option value="pie">Pie Chart</option>
-          <option value="line">Line Chart</option>
-        </select>
-        <label for="email">Email Address:</label>
-        <input type="text" id="email" name="email">
-        <button>Create</button>
+        <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
+        <div>
+          <div>
+            <label for="name_required">Voter Must Enter Name?</label>
+            <input type="checkbox" id="name_required" /><label for="name_required" id="label">Toggle</label>
+          </div>
+          <div>
+            <label for="render_as">Chart Type:</label>
+            <select name="render_as" id="render_as">
+              <option value="column">Bar Chart</option>
+              <option value="pie">Pie Chart</option>
+              <option value="line">Line Chart</option>
+            </select>
+          </div>
+        </div>
+        <div id="email-input">
+          <label for="email">Email Address:</label>
+          <input type="text" class="inputField" id="email" name="email">
+        </div>
+        <button id="create">Create</button>
       </form>
 
     `)
@@ -249,10 +263,14 @@ $(document).ready(() => {
   $(document).on('click','.addNewOption',function(){
     const $newInput = `
     <div>
-    <label for="choice">Option:</label>
-    <input type="text" id="option" name="option">
-    <label for="description">Description:</label>
-    <textarea id="description" name="description"></textarea>
+      <div>
+        <label for="choice">Option:</label>
+        <input class="inputField" type="text" id="option" name="option">
+      </div>
+      <div>
+        <label for="description">Description:</label>
+        <textarea class="inputField" id="description" name="description"></textarea>
+      </div>
     </div>
     `;
     $(".options").append($newInput);
