@@ -93,7 +93,7 @@ $(document).ready(() => {
             </button>
           </div>
           <div class="modal-body">
-            <div id="modalGraph" style="height: 600px; width: 100%;></div>
+            <div id="modalGraph" style="height:60vh; width:100%;"></div>
           </div>
           <div class="modal-footer">
           </div>
@@ -299,25 +299,20 @@ $(document).ready(() => {
     event.preventDefault();
     $("#error").empty();
     const userEmail = $(this).find("#email").val();
-    const desCheck = $(this).find(".desCheck").serialize().split("&").filter(x => x ==="description=")
-    console.log(desCheck)
     const titleCheck = $(this).find("#title").val();
     const optionsCheck = $(this).find(".optionCheck").serialize().split("&").filter((x) => x === "option=");
-    // if (!titleCheck || optionsCheck[0] || !userEmail || desCheck[0]) {
-    //   if (!titleCheck) {
-    //     $("#error").append("<p>title cannot be empty</p>");
-    //   }
-    //   if (optionsCheck[0]) {
-    //     $("#error").append("<p>option cannot be empty</p>");
-    //   }
-    //   if (!userEmail){
-    //     $("#error").append("<p>email cannot be empty</p>")
-    //   }
-    //   if (desCheck[0]){
-    //     $("#error").append("<p>description cannot be empty<p>")
-    //   }
-    //   return;
-    // }
+    if (!titleCheck || optionsCheck[0] || !userEmail) {
+      if (!titleCheck) {
+        $("#error").append("<p>title cannot be empty</p>");
+      }
+      if (optionsCheck[0]) {
+        $("#error").append("<p>option cannot be empty</p>");
+      }
+      if (!userEmail){
+        $("#error").append("<p>email cannot be empty</p>")
+      }
+      return;
+    }
     console.log($(this).serialize())
 
     $.ajax({
