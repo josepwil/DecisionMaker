@@ -87,13 +87,13 @@ $(document).ready(() => {
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">${graphTitle}</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Detailed View</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <div id="modalGraph" style="height:60vh; width:100%;"></div>
+            <div id="modalGraph" style="height:400px; width:100%;"></div>
           </div>
           <div class="modal-footer">
           </div>
@@ -226,7 +226,7 @@ $(document).ready(() => {
         <div>
           <div>
             <label for="name_required">Voter Must Enter Name?</label>
-            <input type="checkbox" id="name_required"><label for="name_required" id="label">Toggle</label>
+            <input type="checkbox" id="name_required" name="name_required"><label for="name_required" id="label">Toggle</label>
           </div>
           <div>
             <label for="render_as">Chart Type:</label>
@@ -321,6 +321,7 @@ $(document).ready(() => {
       data: $(this).serialize()
     })
     .done(function (data) {
+      console.log(data);
       const resultsLink = `http://localhost:8080/?id=${data}`;
       const voteLink = `http://localhost:8080/polls/vote/${data}`;
       const $pollConfirmation = pollCreated(resultsLink, voteLink);

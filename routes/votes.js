@@ -20,6 +20,7 @@ module.exports = (db) => {
         const pollData = data.rows;
         const templateVars = { pollData };
         res.render("poll_vote", templateVars);
+        console.log(templateVars);
       })
       .catch(err => {
         res
