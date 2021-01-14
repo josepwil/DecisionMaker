@@ -93,7 +93,7 @@ $(document).ready(() => {
             </button>
           </div>
           <div class="modal-body">
-            <div id="modalGraph" style="height: 360px; width: 100%;></div>
+            <div id="modalGraph" style="height: 600px; width: 100%;></div>
           </div>
           <div class="modal-footer">
           </div>
@@ -252,11 +252,13 @@ $(document).ready(() => {
   // poll created (with links)
   const pollCreated = function (resultLink, SubmissionLink) {
     const $markup = `
-    <h3>Poll Created</h3>
-    <div>
-      <p>You will be notified via email whenever someone votes on your poll</p>
-      <p>Results Link: <a href=${resultLink}>${resultLink}</a></p>
-      <p>Voter Link:  <a href=${SubmissionLink}>${SubmissionLink}</a></p>
+    <div class="content">
+      <h3>Poll Created</h3>
+      <div id="pollLinks">
+        <p>You will be notified via email whenever someone votes on your poll</p>
+        <p>Results Link: <a href=${resultLink}>${resultLink}</a></p>
+        <p>Link to Vote:  <a href=${SubmissionLink}>${SubmissionLink}</a></p>
+      </div>
     </div>
     `;
     return $markup;
@@ -301,21 +303,21 @@ $(document).ready(() => {
     console.log(desCheck)
     const titleCheck = $(this).find("#title").val();
     const optionsCheck = $(this).find(".optionCheck").serialize().split("&").filter((x) => x === "option=");
-    if (!titleCheck || optionsCheck[0] || !userEmail || desCheck[0]) {
-      if (!titleCheck) {
-        $("#error").append("<p>title cannot be empty</p>");
-      }
-      if (optionsCheck[0]) {
-        $("#error").append("<p>option cannot be empty</p>");
-      }
-      if (!userEmail){
-        $("#error").append("<p>email cannot be empty</p>")
-      }
-      if (desCheck[0]){
-        $("#error").append("<p>description cannot be empty<p>")
-      }
-      return;
-    }
+    // if (!titleCheck || optionsCheck[0] || !userEmail || desCheck[0]) {
+    //   if (!titleCheck) {
+    //     $("#error").append("<p>title cannot be empty</p>");
+    //   }
+    //   if (optionsCheck[0]) {
+    //     $("#error").append("<p>option cannot be empty</p>");
+    //   }
+    //   if (!userEmail){
+    //     $("#error").append("<p>email cannot be empty</p>")
+    //   }
+    //   if (desCheck[0]){
+    //     $("#error").append("<p>description cannot be empty<p>")
+    //   }
+    //   return;
+    // }
     console.log($(this).serialize())
 
     $.ajax({
