@@ -45,7 +45,6 @@ module.exports = (db) => {
   router.post("/", (req, res) => {
     let data = req.body
     const creatorEmail = data.email;
-
     db.query(creatorQuery, [creatorEmail])
       .then(creatorInfo => {
         return creatorInfo.rows[0].id;
