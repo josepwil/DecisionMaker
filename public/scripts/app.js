@@ -93,7 +93,7 @@ $(document).ready(() => {
             </button>
           </div>
           <div class="modal-body">
-            <div id="modalGraph" style="height: 360px; width: 100%;></div>
+            <div id="modalGraph" style="height: 600px; width: 100%;></div>
           </div>
           <div class="modal-footer">
           </div>
