@@ -5,4 +5,17 @@ VALUES (1, 'apple', 'this is a red fruit'),
        (2, 'pizza', 'extra cheese'),
        (2, 'burger', 'Mcdonalds'),
        (2, 'fried chicken', 'KFC'),
-       (2, 'taco bell', 'um...sure');
+       (2, 'taco bell', 'um...sure'),
+       (3, 'Harry Potter', 'Wizards'),
+       (3, 'Avengers', 'Superheroes'),
+       (3, 'James Bond', 'Spies'),
+       (3, 'Soul', 'Jazz'),
+       (3, '1917', 'War'),
+       (4, 'New York', 'The big apple'),
+       (4, 'San Diego', 'Beaches'),
+       (5, 'Green/Orange', 'Best colours'),
+       (5, 'Red/Blue', 'Why not'),
+       (5, 'Purple/Black', 'Another choice'),
+       (6, 'Iphone', 'Gotta go apple'),
+       (6, 'Samsung', 'Gotta be Samsung');
+

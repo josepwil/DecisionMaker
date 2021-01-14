@@ -138,7 +138,7 @@ $(document).ready(() => {
       let i = 1;
       for (let graph of dataFromGraphs) {
         let newDiv = `<div id="chartContainer${i}" data-poll="${graph[0].poll_id}" class="graph" style="width:40%; height:300px;"></div>`;
-        $("#chartContainer").append(newDiv);
+        $("#chartContainer").prepend(newDiv);
         // createGraph('column', graph, $(`#chartContainer${i}`));
         createGraph(graph[0].graphType, graph, $(`#chartContainer${i}`));
         i++;
