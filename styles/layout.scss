@@ -40,6 +40,9 @@ nav div h3{
   background-color: #93F5D4;
   border-width: thin
 }
+.navButton button:hover{
+  cursor: pointer;
+}
 
 .navButton .createPoll{
   font-size: 12;
@@ -64,10 +67,12 @@ button:focus{
 .graph{
   margin:1em 0 1em;
 }
+
 .canvasjs-chart-canvas {
   border:none;
   border-radius:1em;
 }
+
 
 
 .newPollForm{
@@ -111,8 +116,9 @@ button:focus{
   display: flex;
   flex-direction: column;
 }
+
 #titleInput label{
-  margin-left: 2.5em;
+  margin-left: 2em;
 }
 #titleInput input{
   width: 85%;
@@ -136,10 +142,11 @@ button:focus{
 .inputField:focus{
   outline:none;
 }
+//all input label, title, option, description.....
 label{
   margin-right: 0.5em;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 2vw;
+  font-size: 2.5vw;
+  font-family: 'Damion', cursive;
 }
 
 .newPollForm button {
@@ -151,7 +158,7 @@ button.addNewOption{
   font-size: 18;
   height: 2.25em;
   width: 2.25em;
-  background-color: whitesmoke;
+  background-color: #93F5D4;
   margin-bottom:none;
 }
 

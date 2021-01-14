@@ -60,7 +60,8 @@ $(document).ready(() => {
     anchor.CanvasJSChart({ //Pass chart options
       backgroundColor: "#D9EDDF",
       title: {
-        text: graphDataPoints[0].title
+        text: graphDataPoints[0].title,
+        padding: 25,
       },
       data: [
         {
@@ -198,17 +199,17 @@ $(document).ready(() => {
     <form class="newPollForm">
       <h3>Add A New Poll</h3>
         <div id="titleInput">
-          <label for="title">Title:</label>
+          <label for="title">Title</label>
           <input type="text" id="title" class= "inputField"name="title">
         </div>
         <div class="options">
         <div>
           <div>
-          <label for="choice">Option:</label>
-          <input type="text" class="inputField" id="option" name="option">
+          <label for="choice">Option</label>
+          <input type="text" class="inputField option" name="option">
           </div>
           <div>
-          <label for="description">Description:</label>
+          <label for="description">Description</label>
           <textarea id="description" class="inputField" name="description"></textarea>
           </div>
         </div>
@@ -216,7 +217,7 @@ $(document).ready(() => {
         <button type="button" class="addNewOption"><i class="fas fa-plus"></i></button>
         <div>
           <div>
-            <label for="name_required">Voter Must Enter Name?</label>
+            <label for="name_required">Voter name required?</label>
             <input type="checkbox" id="name_required" /><label for="name_required" id="label">Toggle</label>
           </div>
           <div>
@@ -232,6 +233,7 @@ $(document).ready(() => {
           <label for="email">Email Address:</label>
           <input type="text" class="inputField" id="email" name="email">
         </div>
+        <div id="error"></div>
         <button id="create">Create</button>
       </form>
 
@@ -265,7 +267,7 @@ $(document).ready(() => {
     <div>
       <div>
         <label for="choice">Option:</label>
-        <input class="inputField" type="text" id="option" name="option">
+        <input class="inputField option" type="text" name="option">
       </div>
       <div>
         <label for="description">Description:</label>
@@ -279,9 +281,18 @@ $(document).ready(() => {
   // post the submitted form
   $(document).on('submit', '.newPollForm', function(event) {
     event.preventDefault();
+    $("#error").empty()
+    const title = $(this).find("#title").val();
+    const options = $(this).serialize();
+    console.log (options);
+    if(!title){
+      if(!title){
+        $("#error").append("<p>title cannot be empty<p>")
+      }
+      return;
+    }
 
     const userEmail = $(this).find("#email").val();
-
     $.ajax({
       method: "POST",
       url: "/polls",
