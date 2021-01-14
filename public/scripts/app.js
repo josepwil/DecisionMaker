@@ -109,6 +109,10 @@ $(document).ready(() => {
     if (id[0] === "?id") {
       let pollID = id[id.length - 1];
       const specificGraph = pollObjs[pollID];
+      if(!specificGraph){
+        alert("no data for selected graph");
+        return;
+      }
       let dataFromGraph = graphData(specificGraph).pop();
 
       const graphType = specificGraph[0].render_graph;
