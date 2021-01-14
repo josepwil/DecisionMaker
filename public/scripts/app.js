@@ -58,7 +58,7 @@ $(document).ready(() => {
 
   const createGraph = function(graphType, graphDataPoints, anchor) {
     anchor.CanvasJSChart({ //Pass chart options
-      backgroundColor: "#cad2de",
+      backgroundColor: "#D9EDDF",
       title: {
         text: graphDataPoints[0].title
       },
@@ -197,19 +197,19 @@ $(document).ready(() => {
     const $markup = $(`
     <form class="newPollForm">
       <h3>Add A New Poll</h3>
-        <div>
+        <div id="titleInput">
           <label for="title">Title:</label>
-          <input type="text" id="title" name="title">
+          <input type="text" id="title" class= "inputField"name="title">
         </div>
         <div class="options">
         <div>
           <div>
           <label for="choice">Option:</label>
-          <input type="text" id="option" name="option">
+          <input type="text" class="inputField" id="option" name="option">
           </div>
           <div>
           <label for="description">Description:</label>
-          <textarea id="description" name="description"></textarea>
+          <textarea id="description" class="inputField" name="description"></textarea>
           </div>
         </div>
         </div>
@@ -217,10 +217,10 @@ $(document).ready(() => {
         <div>
           <div>
             <label for="name_required">Voter Must Enter Name?</label>
-            <input type="checkbox" id="name_required" name="name_required">
+            <input type="checkbox" id="name_required" /><label for="name_required" id="label">Toggle</label>
           </div>
           <div>
-            <label for="render_as">Render Results as:</label>
+            <label for="render_as">Chart Type:</label>
             <select name="render_as" id="render_as">
               <option value="column">Bar Chart</option>
               <option value="pie">Pie Chart</option>
@@ -230,9 +230,9 @@ $(document).ready(() => {
         </div>
         <div id="email-input">
           <label for="email">Email Address:</label>
-          <input type="text" id="email" name="email">
+          <input type="text" class="inputField" id="email" name="email">
         </div>
-        <button>Create Poll</button>
+        <button id="create">Create</button>
       </form>
 
     `)
@@ -265,11 +265,11 @@ $(document).ready(() => {
     <div>
       <div>
         <label for="choice">Option:</label>
-        <input type="text" id="option" name="option">
+        <input class="inputField" type="text" id="option" name="option">
       </div>
       <div>
         <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea>
+        <textarea class="inputField" id="description" name="description"></textarea>
       </div>
     </div>
     `;
