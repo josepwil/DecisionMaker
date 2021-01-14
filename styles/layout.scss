@@ -233,7 +233,23 @@ button.addNewOption{
   cursor: pointer;
   background-color: #00A9C7;
 }
+
+#addPop{
+  width:20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 button.addNewOption{
+  border:none;
+  border-radius: 1em;
+  font-size: 18;
+  height: 2.25em;
+  width: 2.25em;
+  background-color: whitesmoke;
+  margin-bottom:none;
+}
+button#optionPop{
   border:none;
   border-radius: 1em;
   font-size: 18;
