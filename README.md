@@ -19,6 +19,7 @@ Email send using mailgun api notifying creator their new poll was created (They 
 Voting screen where voters can click and drag options into their preferred order using sortable.js:
 !["Voting Screen"](https://github.com/josepwil/DecisionMaker/blob/master/screenshots/voteform.png?raw=true)
 
+
 ## Getting Started
 
 1. Create the `.env` by using `.env.example` as a reference: `cp .env.example .env`
